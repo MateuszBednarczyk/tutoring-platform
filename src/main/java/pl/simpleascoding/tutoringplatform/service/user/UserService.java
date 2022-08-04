@@ -1,16 +1,16 @@
 package pl.simpleascoding.tutoringplatform.service.user;
 
 import org.springframework.stereotype.Service;
-import pl.simpleascoding.tutoringplatform.dto.ChangeUserPasswordDTO;
-import pl.simpleascoding.tutoringplatform.dto.CreateUserDTO;
+import pl.simpleascoding.tutoringplatform.dto.requests.ChangeUserPasswordDTO;
+import pl.simpleascoding.tutoringplatform.dto.requests.CreateUserDTO;
 
 @Service
 interface UserService {
 
-    String createUser(CreateUserDTO dto, String rootUrl);
+    void createUser(CreateUserDTO dto, String rootUrl);
 
-    String confirmUserRegistration(String token);
+    void confirmUserRegistration(String token);
 
-    String changeUserPassword(ChangeUserPasswordDTO dto, String username);
+    void changeUserPassword(ChangeUserPasswordDTO dto, String username);
 
 }

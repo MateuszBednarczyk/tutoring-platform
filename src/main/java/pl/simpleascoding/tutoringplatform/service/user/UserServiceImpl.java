@@ -1,9 +1,9 @@
 package pl.simpleascoding.tutoringplatform.service.user;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -13,8 +13,8 @@ import pl.simpleascoding.tutoringplatform.domain.token.TokenType;
 import pl.simpleascoding.tutoringplatform.domain.user.Role;
 import pl.simpleascoding.tutoringplatform.domain.user.RoleType;
 import pl.simpleascoding.tutoringplatform.domain.user.User;
-import pl.simpleascoding.tutoringplatform.dto.ChangeUserPasswordDTO;
-import pl.simpleascoding.tutoringplatform.dto.CreateUserDTO;
+import pl.simpleascoding.tutoringplatform.dto.requests.ChangeUserPasswordDTO;
+import pl.simpleascoding.tutoringplatform.dto.requests.CreateUserDTO;
 import pl.simpleascoding.tutoringplatform.exception.*;
 import pl.simpleascoding.tutoringplatform.repository.TokenRepository;
 import pl.simpleascoding.tutoringplatform.repository.UserRepository;
@@ -35,7 +35,7 @@ class UserServiceImpl implements UserService {
 
     @Override
     @Transactional
-    public String createUser(CreateUserDTO dto, String rootUrl) {
+    public void createUser(CreateUserDTO dto, String rootUrl) {
         userRepository.findUserByUsername(dto.username()).ifPresent(user -> {
             throw new UsernameTakenException(dto.username());
         });
@@ -60,12 +60,11 @@ class UserServiceImpl implements UserService {
 
         mailSender.send(message);
 
-        return HttpStatus.OK.getReasonPhrase();
     }
 
     @Override
     @Transactional
-    public String confirmUserRegistration(String tokenValue) {
+    public void confirmUserRegistration(String tokenValue) {
         Token token = tokenRepository.findTokenByValue(tokenValue).orElseThrow(TokenNotFoundException::new);
 
         if (token.getType() != TokenType.REGISTER) {
@@ -83,7 +82,6 @@ class UserServiceImpl implements UserService {
         token.getUser().setEnabled(true);
         token.confirm();
 
-        return HttpStatus.OK.getReasonPhrase();
     }
 
     /**
@@ -93,20 +91,16 @@ class UserServiceImpl implements UserService {
      *
      * @param newPasswordsData User-provided multiple password data
      * @param username         Username of the user
-     * @return The status of the operation
      */
     @Override
     @Transactional
-    public String changeUserPassword(ChangeUserPasswordDTO newPasswordsData, String username) {
+    public void changeUserPassword(ChangeUserPasswordDTO newPasswordsData, String username) {
         User userEntity = userRepository.findUserByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException(username));
-
         if (isChangeAllowed(userEntity.getPassword(), newPasswordsData)) {
             userEntity.setPassword(passwordEncoder.encode(newPasswordsData.newPassword()));
-
-            return HttpStatus.OK.getReasonPhrase();
         } else {
-            return HttpStatus.UNAUTHORIZED.getReasonPhrase();
+            throw new AccessDeniedException("Password change failed");
         }
     }
 

@@ -1,6 +1,6 @@
 package pl.simpleascoding.tutoringplatform.service.security;
 
-import pl.simpleascoding.tutoringplatform.dto.CredentialsDTO;
+import pl.simpleascoding.tutoringplatform.dto.requests.CredentialsDTO;
 
 import java.util.Map;
 

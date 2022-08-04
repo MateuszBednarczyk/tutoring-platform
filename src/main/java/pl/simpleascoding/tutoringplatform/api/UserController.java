@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import pl.simpleascoding.tutoringplatform.dto.ChangeUserPasswordDTO;
-import pl.simpleascoding.tutoringplatform.dto.CreateUserDTO;
+import pl.simpleascoding.tutoringplatform.dto.requests.ChangeUserPasswordDTO;
+import pl.simpleascoding.tutoringplatform.dto.requests.CreateUserDTO;
 import pl.simpleascoding.tutoringplatform.service.user.UserFacade;
 
 import javax.servlet.http.HttpServletRequest;
@@ -20,19 +20,23 @@ class UserController {
 
     @PostMapping
     ResponseEntity<String> createUser(@RequestBody CreateUserDTO dto, HttpServletRequest request) {
-        return new ResponseEntity<>(userFacade.createUser(dto, request.getRequestURL().toString()), HttpStatus.OK);
+        userFacade.createUser(dto, request.getRequestURL().toString());
+
+        return new ResponseEntity<>(HttpStatus.OK.getReasonPhrase(), HttpStatus.OK);
     }
 
     @GetMapping("/confirm-registration")
     ResponseEntity<String> confirmRegistration(@RequestParam String tokenValue) {
-        return new ResponseEntity<>(userFacade.confirmUserRegistration(tokenValue), HttpStatus.OK);
+        userFacade.confirmUserRegistration(tokenValue);
+
+        return new ResponseEntity<>(HttpStatus.OK.getReasonPhrase(), HttpStatus.OK);
     }
 
     @PostMapping("/change-password")
     ResponseEntity<String> changeUserPassword(@RequestBody ChangeUserPasswordDTO dto, Principal principal) {
+        userFacade.changeUserPassword(dto, principal.getName());
 
-        return new ResponseEntity<>(userFacade.changeUserPassword(dto, principal.getName()), HttpStatus.OK);
-
+        return new ResponseEntity<>(HttpStatus.OK.getReasonPhrase(), HttpStatus.OK);
     }
 
 }

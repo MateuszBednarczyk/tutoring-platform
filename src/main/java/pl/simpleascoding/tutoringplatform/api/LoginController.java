@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-import pl.simpleascoding.tutoringplatform.dto.CredentialsDTO;
+import pl.simpleascoding.tutoringplatform.dto.requests.CredentialsDTO;
 import pl.simpleascoding.tutoringplatform.service.security.SecurityService;
 
 import javax.servlet.http.HttpServletRequest;

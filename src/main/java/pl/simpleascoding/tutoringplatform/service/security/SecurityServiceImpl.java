@@ -6,7 +6,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.stereotype.Service;
-import pl.simpleascoding.tutoringplatform.dto.CredentialsDTO;
+import pl.simpleascoding.tutoringplatform.dto.requests.CredentialsDTO;
 import pl.simpleascoding.tutoringplatform.exception.InvalidTokenException;
 import pl.simpleascoding.tutoringplatform.exception.MissingParametersException;
 import pl.simpleascoding.tutoringplatform.exception.MissingRefreshTokenException;

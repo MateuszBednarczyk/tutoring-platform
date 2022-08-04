@@ -1,4 +1,4 @@
-package pl.simpleascoding.tutoringplatform.dto;
+package pl.simpleascoding.tutoringplatform.dto.requests;
 
 import org.hibernate.annotations.Immutable;
 
